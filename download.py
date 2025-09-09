@@ -129,51 +129,6 @@ def merge_ts_raw(folder, output_file="output.ts"):
 
 
 
-def download_video(code):
-    """下载并处理一个番号视频"""
-    url = f"https://jable.tv/videos/{code}/"
-    driver = Chrome()
-    driver.get(url)
-
-    try:
-        title = driver.find_element(By.CLASS_NAME, "header-left").text
-    except:
-        print(f"[red]番号 {code} 无效[/red]")
-        driver.quit()
-        return
-    driver.quit()
-
-    folder_path = code
-    os.makedirs(folder_path, exist_ok=True)
-    ts_list, cipher, folder_path = fetch_m3u8(driver, folder_path, code)
-
-    with Progress(
-        TextColumn("[bold blue]{task.description}"),
-        BarColumn(),
-        MofNCompleteColumn(),
-        TextColumn("片段"),
-        TimeElapsedColumn(),
-        TimeRemainingColumn(),
-    ) as progress:
-        task_id = progress.add_task(f"[cyan]{code} 下载中", total=len(ts_list))
-        download_ts_files(ts_list, folder_path, cipher, progress=progress, task_id=task_id)
-
-    # 合并 TS
-    raw_ts = osp.join(folder_path, f"raw_{code}.ts")
-    merge_ts_raw(folder_path, output_file=raw_ts)
-
-    # 转码 MP4
-    output_file = osp.join(folder_path, f"{code}.mp4")
-    (
-        ffmpeg
-        .input(raw_ts)
-        .output(output_file, **{'c:v': 'h264_nvenc', 'b:v': '13000K', 'threads': 5})
-        .run()
-    )
-    os.remove(raw_ts)
-    print(f"[green]番号 {code} 下载完成 → {output_file}[/green]")
-
-
 
 if __name__ == "__main__":
     code = input("请输入影片的番号:").lower()
@@ -235,4 +190,5 @@ if __name__ == "__main__":
     )
 
     os.remove(input_file)
+
 
