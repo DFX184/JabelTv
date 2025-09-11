@@ -69,5 +69,9 @@ python download_multiple_order.py
 - [ ] 集成 GUI 界面
 - [ ] 多进程下载多个影片
 
-[![Star History Chart](https://api.star-history.com/svg?repos=torvalds/linux&type=Date)](https://star-history.com/#torvalds/linux&Date)
+## ⭐ Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=DFX184/JabelTv&type=Date)](https://star-history.com/#DFX184/JabelTv&Date)
+
+
 
